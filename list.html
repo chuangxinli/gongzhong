@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" ng-controller="myCtrl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/angular-motion.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/jquery.js"></script>
+  <script src="js/angular.js"></script>
+  <script src="js/angular-animate.js"></script>
+  <script src="js/angular-strap.js"></script>
+  <script src="js/angular-strap.tpl.js"></script>
+  <script src="js/angular-paginations.js"></script>
+  <!--<script src="https://cdn.bootcss.com/jspdf/1.4.0/jspdf.debug.js"></script>
+  <script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script>-->
+  <style>
+    .alert {
+      padding: 15px;
+      position: absolute;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      width: 50% !important;
+    }
+
+    .alert.top {
+      top: 100px;
+      left: 25%;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="form-inline m_top">
+    <div class="form-group">
+      <span>省份：</span>
+      <select class="form-control" ng-change="changeProvince()" ng-model="selectedProvinceId"
+              ng-options="p.provinceCode as p.provinceName for p in provinceList">
+      </select>
+    </div>
+    <div class="form-group m_left">
+      <span>关键字：</span>
+      <select class="form-control" ng-model="selectedConditionId"
+              ng-options="c.conditionCode as c.conditionName for c in conditionList">
+      </select>
+    </div>
+    <input type="text" class="form-control m_left" placeholder="请输入查找内容" ng-model="search_info">
+    <button type="button" class="btn btn-primary m_left" ng-click="searchData()">查询</button>
+    <button type="button" class="btn btn-default f_right" ng-click="pdfDown()">下载</button>
+  </div>
+  <div id="export_content">
+    <table class="table table-bordered m_top">
+      <thead>
+      <th>编号</th>
+      <th>姓名</th>
+      <th>享受课次</th>
+      <th>手机号</th>
+      <th>邀请人数</th>
+      <th>省份</th>
+      <th>学校</th>
+      <th>年级</th>
+      <th>报名时间</th>
+      </thead>
+      <tbody>
+      <tr ng-repeat="item in infoList">
+        <td>{{item.id}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.courseNum}}</td>
+        <td>{{item.phone}}</td>
+        <td>{{item.inviteNum}}</td>
+        <td>{{item.provinceName}}</td>
+        <td>{{item.school}}</td>
+        <td>{{item.grade}}</td>
+        <td>{{item.registerDate}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <my-pagination page-option="option" v-show="infoList.length > 0"></my-pagination>
+</div>
+<script>
+  var app = angular.module('myApp', ['myModule', 'ngAnimate', 'mgcrea.ngStrap']);
+  app.controller('myCtrl', function ($scope, $http, $alert) {
+    $scope.provinceList = [{provinceCode: '0', provinceName: '请选择'}, {
+      provinceCode: 1, provinceName: '河南省'}, {provinceCode: 2, provinceName: '河北省'}, {provinceCode: 3, provinceName: '广西省'}, {provinceCode: 4, provinceName: '河北省'}]
+    $scope.selectedProvinceId = $scope.provinceList[0].provinceCode
+    $scope.conditionList = [{conditionCode: 0, conditionName: '请选择'}, {conditionCode: 1, conditionName: '姓名'
+    }, {conditionCode: 2, conditionName: '学校'}, {conditionCode: 3, conditionName: '手机号'}]
+    $scope.selectedConditionId = $scope.conditionList[0].conditionCode
+    $scope.search_info = ''
+    $scope.pageNum = 10;
+    $scope.option = {
+      curr: 1, //当前页码
+      pageNum: $scope.pageNum, //每页显示的数量
+      total: '', //总的数量
+      all: '', //总页码
+      count: 5, //最多显示的页数,默认为10
+      //点击页面的回调函数，参数page为点击的页数
+      click: function (page) {
+        //console.log(page);
+        $scope.searchData();
+        //这里可以写跳入某个页面等
+      }
+    };
+    //查询列表
+    $scope.searchData = function () {
+      if($scope.selectedConditionId != 0) {
+        if(!$scope.search_info){
+          $alert({
+            title: '',
+            content: '请输入查询内容！',
+            container: 'body',
+            placement: 'top',
+            animation: 'am-fade-and-slide-top',
+            type: 'danger',
+            show: true,
+            duration: '3'
+          });
+          return
+        }
+      }
+      $scope.action = 'http://l2203727n8.51mypc.cn/euser/pageSearch';
+      var searchInfo = ''
+      if($scope.selectedConditionId == 0) {
+        searchInfo = ''
+      } else if ($scope.selectedConditionId == 1) {
+        searchInfo = '&name=' + $scope.search_info
+      } else if ($scope.selectedConditionId == 2) {
+        searchInfo = '&school=' + $scope.search_info
+      } else if ($scope.selectedConditionId == 3) {
+        searchInfo = '&phone=' + $scope.search_info
+      }
+      $scope.search_url = $scope.action + '?provinceCode=' + $scope.selectedProvinceId + '&conditionCode=' + $scope.selectedConditionId + searchInfo + '&pageNumber=' + $scope.option.curr + '&pageSize=' + $scope.option.pageNum;
+      $scope.method = 'GET';
+      $http({method: $scope.method, url: $scope.search_url})
+        .then(function (response) {
+          console.log(response.data)
+          if(response.data) {
+            $scope.infoList = response.data.list;
+            for(var i = 0,len = $scope.infoList.length; i < len; i++) {
+              $scope.provinceList.forEach(function (p1) {
+                if(p1.provinceCode == $scope.infoList[i].province) {
+                  $scope.infoList[i].provinceName = p1.provinceName
+                  return
+                }
+              })
+            }
+            $scope.option.total = response.data.totalRow;
+            $scope.option.all = Math.ceil($scope.option.total / $scope.option.pageNum);
+          } else {
+            $scope.infoList = []
+          }
+        }, function (response) {
+          console.log(response)
+        });
+    };
+    $scope.searchData()
+    /*$scope.pdfDown = function () {
+     html2canvas(
+     document.getElementById("export_content"),
+     {
+     dpi: 172,//导出pdf清晰度
+     onrendered: function (canvas) {
+     var contentWidth = canvas.width;
+     var contentHeight = canvas.height;
+
+     //一页pdf显示html页面生成的canvas高度;
+     var pageHeight = contentWidth / 592.28 * 841.89;
+     //未生成pdf的html页面高度
+     var leftHeight = contentHeight;
+     //pdf页面偏移
+     var position = 0;
+     //html页面生成的canvas在pdf中图片的宽高（a4纸的尺寸[595.28,841.89]）
+     var imgWidth = 595.28;
+     var imgHeight = 592.28 / contentWidth * contentHeight;
+
+     var pageData = canvas.toDataURL('image/jpeg', 1.0);
+     var pdf = new jsPDF('', 'pt', 'a4');
+
+     //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
+     //当内容未超过pdf一页显示的范围，无需分页
+     if (leftHeight < pageHeight) {
+     pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight);
+     } else {
+     while (leftHeight > 0) {
+     pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+     leftHeight -= pageHeight;
+     position -= 841.89;
+     //避免添加空白页
+     if (leftHeight > 0) {
+     pdf.addPage();
+     }
+     }
+     }
+     pdf.save('content.pdf');
+     },
+     //背景设为白色（默认为黑色）
+     background: "#fff"
+     })
+     }
+     });*/
+    $scope.pdfDown = function () {
+      var bdhtml = $('#export_content').html(); //获取当前页的html代码l
+      /*var sprnstr = "<!--startprint-->"; //设置打印开始区域
+      var eprnstr = "<!--endprint-->"; //设置打印结束区域
+      var prnhtml = bdhtml.substring(bdhtml.indexOf(sprnstr) + 18); //从开始代码向后取html
+      prnhtml = prnhtml.substring(0, prnhtml.indexOf(eprnstr)); //从结束代码向前取html*/
+      window.document.body.innerHTML = bdhtml;
+      window.print();
+      window.document.body.innerHTML = bdhtml;
+      location.reload(true);
+    }
+  })
+</script>
+</body>
+</html>

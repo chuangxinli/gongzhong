@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Title</title>
+  <meta charset="UTF-8">
+  <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <meta content="email=no" name="format-detection">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/rem.js"></script>
+  <script src="js/jquery.js"></script>
+</head>
+<body>
+<div class="win">
+  <div class="fir_section">
+    <img src="image/banner1_01.png" alt="">
+  </div>
+  <div class="sec_section">
+    <img src="image/x1.png" alt="" class="img1">
+    <img src="image/x2.png" alt="" class="img2">
+    <img src="image/x3.png" alt="" class="img3"></div>
+  <div class="thi_section">
+    <img src="image/banner2_03.png" alt="">
+  </div>
+  <div class="go_info">
+    <p><a href="info.html">一&nbsp;元&nbsp;报&nbsp;名</a></p>
+    <p>福利活动，一旦报名，概不退款</p>
+  </div>
+</div>
+<script>
+  $('.sec_section').click(function (event) {
+    if (event.target.className == 'img1') {
+      location.href = 'bigImage.html?img=1'
+    }
+    if (event.target.className == 'img2') {
+      location.href = 'bigImage.html?img=2'
+    }
+    if (event.target.className == 'img3') {
+      location.href = 'bigImage.html?img=3'
+    }
+  })
+</script>
+</body>
+</html>

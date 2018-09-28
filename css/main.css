@@ -1,0 +1,110 @@
+/*win页面*/
+
+.win{
+  width: 100%;
+  position: relative;
+}
+.win .fir_section, .win .sec_section, .win .thi_section{
+  width: 100%;
+}
+.win .fir_section > img, .win .thi_section > img{
+  width: 100%;
+}
+.win .sec_section{
+  font-size: 0;
+  min-height: 2rem;
+  background-image: url(../image/bj_02.png);
+  background-repeat: repeat;
+  background-size: 100%;
+}
+
+.win .sec_section img{
+  width: 32%;
+  margin-left: 1%;
+}
+
+.mask{
+  width: 100%;
+}
+
+.mask img{
+  width: 100%;
+}
+
+.win .go_info{
+  width: 100%;
+  height: 0.5rem;
+  position: fixed;
+  left: 0;
+  bottom: 0.4rem;
+}
+.win .go_info p:nth-of-type(1){
+  width: 3rem;
+  height: 0.5rem;
+  line-height: 0.5rem;
+  text-align: center;
+  background-color: #ee8724;
+  border-radius: 0.3rem;
+  margin: auto;
+}
+.win .go_info p:nth-of-type(1) a{
+  color: #ffffff;
+  font-size: 0.3rem;
+}
+
+.win .go_info p:nth-of-type(2){
+  width: 100%;
+  text-align: center;
+}
+/*info页面*/
+.info > h2{
+  height: 0.8rem;
+  line-height: 0.8rem;
+  text-align: center;
+  margin-bottom: -10px;
+}
+
+/*card页面*/
+.card{
+  width: 100%;
+  position: relative;
+}
+.card > img{
+  width: 100%;
+}
+.m_left{
+  margin-left: 20px;
+}
+.f_right{
+  float: right;
+}
+.f_left{
+  float: left;
+}
+.m_top{
+  margin-top: 20px;
+}
+.table-bordered th, .table-bordered td{
+  text-align: center;
+}
+
+/*tip页面*/
+body{
+  background-color: #f3f3f3;
+}
+.tip{
+  width: 100%;
+}
+.tip h2{
+  min-height: 1rem;
+  line-height: 1rem;
+  font-size: 0.4rem;
+  text-align: center;
+}
+.tip p{
+  min-height: 0.6rem;
+  line-height: 0.6rem;
+  font-size: 0.3rem;
+  text-indent: 20px;
+  padding: 0 10px;
+}

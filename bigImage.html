@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Title</title>
+  <meta charset="UTF-8">
+  <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <meta content="email=no" name="format-detection">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/rem.js"></script>
+  <script src="js/jquery.js"></script>
+</head>
+<body style="position: relative">
+  <div class="mask">
+    <img src="image/x1_b.png" alt="">
+  </div>
+  <script>
+    console.log(location.search.split('=')[1])
+    var imgNum = location.search.split('=')[1]
+    if(imgNum == 1) {
+      $('.mask img').attr('src', 'image/x1_b.png')
+    } else if(imgNum == 2) {
+      $('.mask img').attr('src', 'image/x2_b.png')
+    } else if(imgNum == 3) {
+      $('.mask img').attr('src', 'image/x3_b.png')
+    }
+    $('.mask').css({
+      width: document.documentElement.clientWidth + 'px',
+      height: document.documentElement.clientHeight + 'px',
+      display: 'block',
+      position: 'fixed',
+      left: 0,
+      top: 0,
+      zIndex: 999,
+      background: '#777777'
+    })
+    $('.mask img').css({
+      width: document.documentElement.clientWidth + 'px',
+      marginTop: (document.documentElement.clientHeight - parseFloat($('.mask img').height())) / 2 + 'px'
+    })
+    setTimeout(function () {
+      $('.mask img').css({
+        width: document.documentElement.clientWidth + 'px',
+        marginTop: (document.documentElement.clientHeight - parseFloat($('.mask img').height())) / 2 + 'px'
+      })
+    },100)
+
+    $('.mask img').click(function () {
+      window.history.back(-1)
+    })
+  </script>
+</body>
+</html>
